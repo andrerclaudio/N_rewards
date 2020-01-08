@@ -1,9 +1,7 @@
 import itertools
-
 import pandas as pd
-
 from turing.file import file_upload
-from string import whitespace
+
 
 def application():
 
@@ -28,21 +26,31 @@ def application():
         if number != '':
             values.append(int(number))
 
-        soma = 0
+        sun = 0
+        success = False
 
         for i in range(0, len(values) + 1):
             for subset in itertools.combinations(values, i):
                 high_value = True
                 for j in subset:
-                    soma = soma + j
-                    if soma > reward:
+                    sun = sun + j
+                    if sun > reward:
                         high_value = False
-                        soma = 0
+                        sun = 0
+                        break
+                    elif sun == reward:
+                        success = True
                         break
 
                 if high_value:
-                    df = df.append({'Valores': subset, 'Soma': soma}, ignore_index=True)
-                    soma = 0
+                    df = df.append({'Valores': subset, 'Soma': sun}, ignore_index=True)
+                    sun = 0
+
+                if success:
+                    break
+
+            if success:
+                break
 
         df.sort_values(by=['Soma'], ascending=False, inplace=True)
         print(reward)
